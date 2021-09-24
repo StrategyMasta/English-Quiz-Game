@@ -124,11 +124,12 @@ h1 {
     font-family: cursive;
     border-radius: 20px;
     border: 4px solid #A0CFAE;
+	visibility: hidden;
 }
 
 #time {
     width: 92%;
-    height: 2%;
+    height: 4%;
     margin-left: 4%;
 }
 
@@ -137,6 +138,7 @@ h1 {
     height: 22%;
     margin: 4%;
     margin-bottom: 2%;
+    margin-top: 2%;
     padding: 4px;
     border-radius: 20px;
     border: 4px solid #472952;
@@ -177,4 +179,26 @@ h1 {
 
 #b, #d {
     margin-left: 2%;
+}
+
+#pause {
+	position: absolute;
+	width: 80%;
+	height: 80%;
+	margin: 5%;
+	background-image: linear-gradient(to bottom, green, lightgreen);
+	visibility: hidden;
+}
+
+#rules {
+	color: purple;
+	font-family: cursive;
+}
+
+#next {
+	width: 50%;
+	height: 20%;
+	background-color: pink;
+	color: green;
+	cursor: pointer;
 }
