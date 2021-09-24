@@ -22,9 +22,11 @@ class View {
         self.points2.innerHTML = "Team2: " + model.points2;
 	self.turn.innerHTML = "Team1";
 	self.interval = setInterval(() => {
-		self.controller.time--;
-		document.getElementById("time").value--;
-		if(self.controller.time <= 0 && !t) {
+		if(model.time > 0 && !t) {
+			model.time--;
+			document.getElementById("time").value--;
+		}
+		if(model.time <= 0 && !t) {
 			let correct;
 			if(self.a.innerHTML == self.thisQuestion.correct) correct = "a";
 			if(self.b.innerHTML == self.thisQuestion.correct) correct = "b";
@@ -34,7 +36,6 @@ class View {
 			setTimeout(() => {
 				self.table.style.visibility = "hidden";
 				self.pause.style.visibility = "visible";
-				self[btn].style.backgroundColor = "#ABFAA9";
 				self[correct].style.backgroundColor = "#ABFAA9";
 			}, 4000);
 			t = true;
@@ -91,7 +92,7 @@ class Model {
 	this.questionCount = -1;
 	this.finished = false;
 	this.start = false;
-	this.time = 80;
+	this.time = 120;
     }
 	
 	Question() {
@@ -129,8 +130,8 @@ class Controller {
         	this.view.c.innerHTML = this.view.thisQuestion.c;
         	this.view.d.innerHTML = this.view.thisQuestion.d;
 		this.view.table.style.visibility = "visible";
-		this.model.time = 80;
-		document.getElementById("time").value = 80;
+		this.model.time = 120;
+		document.getElementById("time").value = 120;
 		t = false;
 	}
     
@@ -149,6 +150,7 @@ class Controller {
 			this.view[btn].style.backgroundColor = "red";
 			this.view[correct].style.backgroundColor = "blue";
 		}
+		t = true;
 		
 		setTimeout(() => {
 			this.view.table.style.visibility = "hidden";
