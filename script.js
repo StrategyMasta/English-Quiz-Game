@@ -1,42 +1,81 @@
+let t = true;
 class View {
     constructor(model, controller) {
         var self = this;
-        const menu = document.getElementById("menu");
-        const wrapper = document.getElementById("wrapper");
-        const table = document.getElementById("table");
-        const pause = document.getElementById("pause");
-        const play = document.getElementById("play");
-        const next = document.getElementById("next");
-        const points1 = document.getElementById("points1");
-        const points2 = document.getElementById("points2");
-        const turn = document.getElementById("turn");
-        const question = document.getElementById("question");
-        const a = document.getElementById("a");
-        const b = document.getElementById("b");
-        const c = document.getElementById("c");
-        const d = document.getElementById("d");
-		let thisQuestion = model.Question();
+        self.menu = document.getElementById("menu");
+        self.wrapper = document.getElementById("wrapper");
+        self.table = document.getElementById("table");
+        self.pause = document.getElementById("pause");
+        self.play = document.getElementById("play");
+        self.next = document.getElementById("next");
+        self.points1 = document.getElementById("points1");
+        self.points2 = document.getElementById("points2");
+        self.turn = document.getElementById("turn");
+        self.question = document.getElementById("question");
+        self.a = document.getElementById("a");
+        self.b = document.getElementById("b");
+        self.c = document.getElementById("c");
+        self.d = document.getElementById("d");
+	self.thisQuestion = model.Question();
         self.controller = controller;
-        points1.innerHTML = "Team1: " + model.points1;
-        points2.innerHTML = "Team2: " + model.points2;
+        self.points1.innerHTML = "Team1: " + model.points1;
+        self.points2.innerHTML = "Team2: " + model.points2;
+	self.turn.innerHTML = "Team1";
+	self.interval = setInterval(() => {
+		self.controller.time--;
+		document.getElementById("time").value--;
+		if(self.controller.time <= 0 && !t) {
+			let correct;
+			if(self.a.innerHTML == self.thisQuestion.correct) correct = "a";
+			if(self.b.innerHTML == self.thisQuestion.correct) correct = "b";
+			if(self.c.innerHTML == self.thisQuestion.correct) correct = "c";
+			if(self.d.innerHTML == self.thisQuestion.correct) correct = "d";
+			self[correct].style.backgroundColor = "blue";
+			setTimeout(() => {
+				self.table.style.visibility = "hidden";
+				self.pause.style.visibility = "visible";
+				self[btn].style.backgroundColor = "#ABFAA9";
+				self[correct].style.backgroundColor = "#ABFAA9";
+			}, 4000);
+			t = true;
+		}
+	  }, 100);
         
         play.onclick = function() {
             self.start();
         };
 		
-		next.onclick = function() {
-            pause.style.visibility = "hidden";
-			self.controller.update();
-			wrapper.style.visibility = "visible";
-			model.start = true;
+        next.onclick = function() {
+          self.pause.style.visibility = "hidden";
+          self.controller.update();
+          self.wrapper.style.visibility = "visible";
+	  self.table.style.visibility = "visible";
+          model.start = true;
+        };
+
+	a.onclick = function() {
+            self.controller.checkAnswer("a");
+        };
+
+	b.onclick = function() {
+            self.controller.checkAnswer("b");
+        };
+
+	c.onclick = function() {
+            self.controller.checkAnswer("c");
+        };
+
+	d.onclick = function() {
+            self.controller.checkAnswer("d");
         };
     }
-    
     start() {
-        menu.style.animationName = "menuTransition";
+        self.menu.style.animationName = "menuTransition";
         setTimeout(function() {
-            menu.style.visibility = "hidden";
-            pause.style.visibility = "visible";
+            self.menu.style.visibility = "hidden";
+            self.pause.style.visibility = "visible";
+	    self.wrapper.style.visibility = "visible";
+	    self.table.style.visibility = "hidden";
         }, 2000);
     }
 }
@@ -46,21 +85,21 @@ class Model {
         this.words = data;
         this.points1 = 0;
         this.points2 = 0;
-		this.turn = "Team1";
-		this.newQuestion = Math.floor(Math.random() * 4);
-		this.usedQuestions = [];
-		this.questionCount = 0;
-		this.finished = false;
-		this.start = false;
-		this.time = 50;
+	this.turn = "Team2";
+	this.newQuestion = Math.floor(Math.random() * 12);
+	this.usedQuestions = [];
+	this.questionCount = -1;
+	this.finished = false;
+	this.start = false;
+	this.time = 80;
     }
 	
 	Question() {
 		if(this.words.length == this.questionCount) this.finished = true;
 		else {
 			this.questionCount++;
-			do this.newQuestion = Math.floor(Math.random() * 4);
-			while(!this.usedQuestions.includes(this.newQuestion))
+			do this.newQuestion = Math.floor(Math.random() * 12);
+			while(this.usedQuestions.includes(this.newQuestion))
 			this.usedQuestions.push(this.newQuestion);
 			return this.words[this.newQuestion];
 		}
@@ -76,35 +115,49 @@ class Controller {
 	
 	updateLeaderboard() {
 		this.view.points1.innerHTML = "Team1: " + this.model.points1;
-        this.view.points2.innerHTML = "Team2: " + this.model.points2;
+        	this.view.points2.innerHTML = "Team2: " + this.model.points2;
 	}
 	
 	update() {
 		this.view.thisQuestion = this.model.Question();
+		if(this.model.turn == "Team1") this.model.turn = "Team2";
+		else this.model.turn = "Team1";
 		this.view.turn.innerHTML = "Turn: " + this.model.turn;
-        this.view.question.innerHTML = this.view.thisQuestion.question;
-        this.view.a.innerHTML = this.view.thisQuestion.a;
-        this.view.b.innerHTML = this.view.thisQuestion.b;
-        this.view.c.innerHTML = this.view.thisQuestion.c;
-        this.view.d.innerHTML = this.view.thisQuestion.d;
+        	this.view.question.innerHTML = this.view.thisQuestion.question;
+        	this.view.a.innerHTML = this.view.thisQuestion.a;
+        	this.view.b.innerHTML = this.view.thisQuestion.b;
+        	this.view.c.innerHTML = this.view.thisQuestion.c;
+        	this.view.d.innerHTML = this.view.thisQuestion.d;
 		this.view.table.style.visibility = "visible";
+		this.model.time = 80;
+		document.getElementById("time").value = 80;
+		t = false;
 	}
     
     checkAnswer(btn) {
+	let correct;
+	if(this.view.a.innerHTML == this.view.thisQuestion.correct) correct = "a";
+	if(this.view.b.innerHTML == this.view.thisQuestion.correct) correct = "b";
+	if(this.view.c.innerHTML == this.view.thisQuestion.correct) correct = "c";
+	if(this.view.d.innerHTML == this.view.thisQuestion.correct) correct = "d";
         if(this.view.thisQuestion.correct == this.view.thisQuestion[btn]) {
-			this.view[btn].style.backgroundColor = "lightblue";
+			this.view[btn].style.backgroundColor = "blue";
 			if(this.model.turn == "Team1") this.model.points1++;
 			if(this.model.turn == "Team2") this.model.points2++;
-			updateLeaderboard();
+			this.updateLeaderboard();
 		} else {
 			this.view[btn].style.backgroundColor = "red";
-			this.view[this.view.thisQuestion.correct].style.backgroundColor = "lightblue";
+			this.view[correct].style.backgroundColor = "blue";
 		}
 		
-		setTimeout(function() {
+		setTimeout(() => {
 			this.view.table.style.visibility = "hidden";
+			this.view.pause.style.visibility = "visible";
 			this.view[btn].style.backgroundColor = "#ABFAA9";
-			this.view[this.view.thisQuestion.correct].style.backgroundColor = "#ABFAA9";
+			this.view[correct].style.backgroundColor = "#ABFAA9";
+			let victor = this.model.points1 > this.model.points2 ? "Team1 Won!" : "Team2 Won!";
+			if(this.model.points1 == this.model.points2) victor = "Its A Draw!";
+			if(this.model.questionCount == 12) alert(victor);
 		}, 4000);
     }
 }

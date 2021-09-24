@@ -81,7 +81,7 @@ h1 {
     top: 0;
     left: 0;
     width: 20%;
-    height: 10%;
+    height: 8%;
     background-color: blue;
     color: white;
     font-size: 25px;
@@ -102,7 +102,7 @@ h1 {
     left: 50%;
     transform: translate(-50%);
     width: 20%;
-    height: 10%;
+    height: 8%;
     background-color: green;
     color: white;
     font-size: 25px;
@@ -183,22 +183,40 @@ h1 {
 
 #pause {
 	position: absolute;
+	top: 50%;
+    	left: 50%;
+    	transform: translate(-50%, -50%);
 	width: 80%;
 	height: 80%;
-	margin: 5%;
 	background-image: linear-gradient(to bottom, green, lightgreen);
 	visibility: hidden;
+	text-align: center;
+}
+
+#rulesH1 {
+	width: 90%;
+	margin-left: 5%;
+	margin-top: 5%;
+	color: violet;
 }
 
 #rules {
-	color: purple;
+	width: 90%;
+	line-height: 150%;
+	margin-left: 5%;
+	margin-top: 2%;
+	color: yellow;
 	font-family: cursive;
 }
 
 #next {
 	width: 50%;
 	height: 20%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 2%;
 	background-color: pink;
 	color: green;
+	font-size: 2.5em;
 	cursor: pointer;
 }
